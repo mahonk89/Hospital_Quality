@@ -112,7 +112,7 @@ ocMD<-as.numeric(outcomestate$MD)
 ocMD[,23]<-as.numeric(ocMD[,23])
 ocMD[,c(2,17)]
 min(ocMD[,23])
-rm(n,a)
+rm(n,a,l)
 states
 states<-names(outcomestate)
 #created for loop to test which state and outcome combo had a tie for the best
@@ -126,4 +126,6 @@ for (n in 1:length(states)) {
     if(l>1){print(paste(a,l,"heart failure"))}
     l<-length(best(a,"pneumonia"))
     if(l>1){print(paste(a,l,"pneumonia"))}
+    a<-NULL
+    l<-NULL
 }
