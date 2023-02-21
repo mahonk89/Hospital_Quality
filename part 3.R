@@ -32,70 +32,77 @@ rankhospital<-function(state,outcome,num="best"){
     # essentially saying subset the rows based on the order of selectedstate col# 11
     # the rows of the entire 46 row df are locked together and then sorted by col# 11/17/23
     if(outcome=="heart attack"){
-        ranked<-selectedstate[order(selectedstate[,11]),]
+        ranked<-selectedstate[order(selectedstate[,11],selectedstate[,2]),]
+        ranked[,11]<-as.numeric(ranked[,11])
         if(is.numeric(num)==T) {
             r<-cbind(ranked[num,c(2,11)],num)
             colnames(r)<-c("Hospital.Name","Mortality.Rate","Rank")
-            #return(r)
+            if(max(num)>sum(!is.na(ranked[,11]))) return(NA)
         }
         if(!is.numeric(num)) {
             if(num=="worst"){
                 r<-cbind(ranked[which.max(ranked[,11]),c(2,11)],"worst")
                 colnames(r)<-c("Hospital.Name","Mortality.Rate","Rank")
-                #return(r)
             }
             if(num=="best") {
                 r<-cbind(ranked[1,c(2,11)],"best")
                 colnames(r)<-c("Hospital.Name","Mortality.Rate","Rank")
-                #return(r)
-        }}
-        if(max(num)>sum(!is.na(ranked[,11]))) return(NA)
+            }
+        }
+        
     }
     if(outcome=="heart failure"){
-        ranked<-selectedstate[order(selectedstate[,17]),]
+        ranked<-selectedstate[order(selectedstate[,17],selectedstate[,2]),]
         if(is.numeric(num)==T) {
             r<-cbind(ranked[num,c(2,17)],num)
             colnames(r)<-c("Hospital.Name","Mortality.Rate","Rank")
-            #return(r)
+            if(max(num)>sum(!is.na(ranked[,17]))) return(NA)
         }
         if(!is.numeric(num)) {
             if(num=="worst"){
                 r<-cbind(ranked[which.max(ranked[,17]),c(2,17)],"worst")
                 colnames(r)<-c("Hospital.Name","Mortality.Rate","Rank")
-                #return(r)
             }
             if(num=="best") {
                 r<-cbind(ranked[1,c(2,17)],"best")
                 colnames(r)<-c("Hospital.Name","Mortality.Rate","Rank")
-                #return(r)
-            }}
-        if(max(num)>sum(!is.na(ranked[,17]))) return(NA)
+            }
+        }
         
     }
     if(outcome=="pneumonia"){
-        ranked<-selectedstate[order(selectedstate[,23]),]
+        ranked<-selectedstate[order(selectedstate[,23],selectedstate[,2]),]
         if(is.numeric(num)==T) {
             r<-cbind(ranked[num,c(2,23)],num)
             colnames(r)<-c("Hospital.Name","Mortality.Rate","Rank")
-            #return(r)
+            if(max(num)>sum(!is.na(ranked[,23]))) return(NA)
         }
         if(!is.numeric(num)) {
             if(num=="worst"){
                 r<-cbind(ranked[which.max(ranked[,23]),c(2,23)],"worst")
                 colnames(r)<-c("Hospital.Name","Mortality.Rate","Rank")
-                #return(r)
             }
             if(num=="best") {
                 r<-cbind(ranked[1,c(2,23)],"best")
                 colnames(r)<-c("Hospital.Name","Mortality.Rate","Rank")
-                #return(r)
-            }}
-        if(max(num)>sum(!is.na(ranked[,23]))) return(NA)
+            }
+        }
+
     }
     return(r)
+    #return(ranked[,c(2,11)])
 }
 
+
 rankhospital("MA","heart attack",58)
+rankhospital("TX","heart failure",4)
+    ## STOPPED 2/20/23
+    ## Running into the issue where hospital names are not being sorted alphabetically
+# in the event of a tie. Unable to solve at this time. setting order(ranked[,c(17,2)])
+# does NOT solve this by ranking from 17 THEN 2 alphabetically. Need to correct. 
+
+rankhospital("MD","heart attack","worst")
+rankhospital("MN", "heart attack", 5000)
 
 #the way worst is handled is neat. Subsetting ranked matrix using the function
 # which.max applied on that column, which will notate the position/row of that max figure
@@ -109,4 +116,7 @@ rankhospital("MA","heart attack",58)
 
 best("MA","heart attack")
 ocMA<-outcomestate$MA
+ocTX<-outcomestate$TX
 ocMA[,c(2,11)]
+ocTX[,17]<-as.numeric(ocTX)[,17]
+ocTX[order(ocTX[,17]),c(2,17)]
