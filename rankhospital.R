@@ -1,4 +1,3 @@
-# ranking hospitals by outcome in a state
 initialdir<-getwd()
 rankhospital<-function(state,outcome,num="best"){
     on.exit(setwd(initialdir))
@@ -80,35 +79,7 @@ rankhospital<-function(state,outcome,num="best"){
                 r<-ranked[1,2]
             }
         }
-
+        
     }
     return(r)
 }
-
-
-rankhospital("MA","heart attack",58)
-rankhospital("TX","heart failure",4)
-    ## STOPPED 2/20/23
-    ## Running into the issue where hospital names are not being sorted alphabetically
-# in the event of a tie. Unable to solve at this time. setting order(ranked[,c(17,2)])
-# does NOT solve this by ranking from 17 THEN 2 alphabetically. Need to correct. 
-
-rhMDhaw<-rankhospital("MD","heart attack","worst")
-rankhospital("MN", "heart attack", 5000)
-
-#the way worst is handled is neat. Subsetting ranked matrix using the function
-# which.max applied on that column, which will notate the position/row of that max figure
-# when applied to the row index will then return the hospital associated. This is being 
-# used because we are allowing NAs to remain. Also could do ranked[sum(!is.na(ranked[,17])),2]
-# which will return the last non-NA value aka max in an ordered list
-
-# This if will handle if num is a non-numeric argument "best". This can be done outside
-#of the ifs above since the column is already being ordered by the required outcome,
-# this is the most simple way to return the correct value.
-
-best("MA","heart attack")
-ocMA<-outcomestate$MA
-ocTX<-outcomestate$TX
-ocMA[,c(2,11)]
-ocTX[,17]<-as.numeric(ocTX)[,17]
-ocTX[order(ocTX[,17]),c(2,17)]
